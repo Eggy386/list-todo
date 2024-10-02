@@ -3,13 +3,40 @@
   "name": "Create React App Sample",
   "icons": [
     {
-      "src": "favicon.ico",
-      "sizes": "64x64 32x32 24x24 16x16",
+      "src": "/icon/icon32x32.ico",
+      "sizes": "32x32",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "/icon/icon48x48.ico",
+      "sizes": "48x48",
+      "type": "image/x-icon"
+    }
+    ,
+    {
+      "src": "/icon/icon64x64.ico",
+      "sizes": "64x64",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "/icon/icon128x128.ico",
+      "sizes": "128x128",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "/icon/icon192x192.ico",
+      "sizes": "192x192",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "/icon/icon256x256.ico",
+      "sizes": "256x256",
       "type": "image/x-icon"
     }
   ],
   "start_url": ".",
   "display": "standalone",
+  "orientation":"any",
   "theme_color": "#000000",
   "background_color": "#ffffff"
 }
