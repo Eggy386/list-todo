@@ -1,9 +1,17 @@
 self.addEventListener('install', event => {
     //Crear un caché
-    caches.open('appShell2').then(cache => {
+    caches.open('appShell3').then(cache => {
         cache.addAll([
             '/index.html',
-           '/manifest.json'
+           '/manifest.json',
+           '/icon/icon32x32.png',
+           '/icon/icon48x48.png',
+           '/icon/icon64x64.png',
+           '/icon/icon128x128.png',
+           '/icon/icon192x192.png',
+           '/icon/icon256x256.png',
+           '/icon/icon512x512.png',
+           '/icon/icon1024x1024.png'
         ]);
     });
 
@@ -13,7 +21,7 @@ self.addEventListener('install', event => {
 
 self.addEventListener('activate', event=>{
      // Eliminar la caché viejita
-     caches.delete('appShell')
+     caches.delete('appShell2')
 })
 
 //Dinamica
