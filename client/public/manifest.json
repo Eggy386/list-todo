@@ -24,7 +24,7 @@
       "type": "image/png"
     },
     {
-      "src": "/icon/icon192x192.png",
+      "src": "/icon/icono192x192.png",
       "sizes": "192x192",
       "type": "image/png"
     },
@@ -36,6 +36,11 @@
     {
       "src": "/icon/icon512x512.png",
       "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon/icon1024x1024.png",
+      "sizes": "1024x1024",
       "type": "image/png"
     }
   ],
