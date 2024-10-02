@@ -9,7 +9,7 @@ const Todo = props => (
         <td className = { props.todo.todo_completed ? 'completed' : ''}>{props.todo.todo_responsible}</td>
         <td className = { props.todo.todo_completed ? 'completed' : ''}>{props.todo.todo_priority}</td>
         <td>
-            <Link to={"/edit/" + props.todo._id}>Edit</Link>
+            <Link to={"/edit/" + props.todo._id}>Editar</Link>
         </td>
     </tr>
 )
@@ -25,16 +25,11 @@ export default class TodosList extends Component {
     }
 
     componentDidMount() {
-        axios.get('http://localhost:4000/todos')
-            .then( res => {
-                this.setState({
-                    todos: res.data
-                })
-            })
-            .catch( err => console.log(err));
+        this.loadTodos();
     }
 
-    componentDidUpdate() {
+    // Evitar que las consultas se hagan de forma continua en cada actualización
+    loadTodos() {
         axios.get('http://localhost:4000/todos')
             .then( res => {
                 this.setState({
@@ -52,14 +47,14 @@ export default class TodosList extends Component {
     render() {
         return (
             <div>
-                <h3>Todos List</h3>
+                <h3>Tareas</h3>
                 <table className="table table-striped" style={{ marginTop: 20}}>
                     <thead>
                         <tr>
-                            <th>Description</th>
-                            <th>Responsible</th>
-                            <th>Priority</th>
-                            <th>Actions</th>
+                            <th>Descripción</th>
+                            <th>Responsable</th>
+                            <th>Prioridad</th>
+                            <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody>

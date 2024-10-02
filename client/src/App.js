@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component} from 'react';
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 
 import TodosList from './components/todos-list.component';
@@ -15,20 +15,20 @@ class App extends Component {
         <div className="container">
           
           <nav className="navbar navbar-expand-lg navbar-light bg-light">
-            <a className="navbar-brand" href="">
+            <Link to='/' className="navbar-brand">
               <img src = {logo} width="30" height="30" alt="logo" />
-            </a>
-            <Link to="/" className="navbar-brand">MERN-Stack Todo App</Link> 
+            </Link>
+            <Link to="/" className="navbar-brand">Lista de tareas</Link> 
             <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#myNavbar" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
               <span className="navbar-toggler-icon"></span>
             </button>
             <div className="collapse navbar-collapse" id="myNavbar">
               <ul className="navbar-nav mr-auto">
                 <li className="navbar-item">
-                  <Link to="/" className="nav-link">Todos</Link>
+                  <Link to="/" className="nav-link">Tareas</Link>
                 </li>
                 <li className="navbar-item">
-                  <Link to="/create" className="nav-link">Create Todo</Link>
+                  <Link to="/create" className="nav-link">Crear Tarea</Link>
                 </li>
               </ul>
             </div>
