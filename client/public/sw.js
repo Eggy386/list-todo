@@ -1,6 +1,6 @@
 self.addEventListener('install', event => {
     //Crear un caché
-    caches.open('appShell3').then(cache => {
+    caches.open('appShell5').then(cache => {
         cache.addAll([
             '/index.html',
            '/manifest.json',
@@ -11,7 +11,9 @@ self.addEventListener('install', event => {
            '/icon/icon192x192.png',
            '/icon/icon256x256.png',
            '/icon/icon512x512.png',
-           '/icon/icon1024x1024.png'
+           '/icon/icon1024x1024.png',
+           '/static/media/logo.ee7cd8ed.svg',
+           '/img_error.jpg'
         ]);
     });
 
@@ -21,7 +23,7 @@ self.addEventListener('install', event => {
 
 self.addEventListener('activate', event=>{
      // Eliminar la caché viejita
-     caches.delete('appShell2')
+     caches.delete('appShell4')
 })
 
 //Dinamica
@@ -34,7 +36,7 @@ self.addEventListener('activate', event=>{
                     return cachedResponse;
                 } else {
                     // Si no está en el cache, retornamos una imagen de error desde el cache
-                    return console.log("Ocurrió un error"); // Ruta de la imagen de error en cache
+                    return caches.match('/img_error.jpg');
                 }
             });
         } else {
@@ -51,7 +53,7 @@ self.addEventListener('activate', event=>{
                 return cachedResponse;
             } else {
                 // Si no está en el cache, retornamos la imagen de error
-                return console.log("Ocurrió un error");
+                return caches.match('/img_error.jpg');
             }
         });
     });
