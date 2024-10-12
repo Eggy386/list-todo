@@ -9,7 +9,12 @@ ReactDOM.render(<App />, document.getElementById('root'));
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: http://bit.ly/CRA-PWA
 
-if ( navigator.serviceWorker ) {
-  navigator.serviceWorker.register('/sw.js')
+if ('serviceWorker' in navigator && 'SyncManager' in window) {
+  window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js').then(reg => {
+          console.log('Service Worker registrado:', reg);
+      }).catch(err => console.error('Error al registrar el Service Worker:', err));
+  });
 }
+
  
