@@ -11,7 +11,7 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
-mongoose.connect('mongodb://localhost:27017/todos', { useNewUrlParser: true });
+mongoose.connect('mongodb+srv://edgarAlvar:13fkjZ855oJbNAUD@cluster0.vrxx0za.mongodb.net/dbTodos', { useNewUrlParser: true });
 const connection = mongoose.connection;
 
 // Once the connection is established, callback
