@@ -118,16 +118,12 @@ self.addEventListener('install', (event) => {
 
 // Activación del SW y limpieza de cachés
 self.addEventListener('activate', (event) => {
-    event.waitUntil(
-        // Obtiene los nombres de las cachés almacenadas
-        caches.keys().then((keys) =>
-            Promise.all(
-            keys
-                .filter((key) => key !== APP_SHELL_CACHE && key !== DYNAMIC_CACHE)
-                .map((key) => caches.delete(key)) // Borra los cachpes que no sean los actuales
-            )
-        )
-    );
+    // Obtiene los nombres de las cachés almacenadas
+    caches.keys().then((keys) =>
+        keys
+            .filter((key) => key !== APP_SHELL_CACHE && key !== DYNAMIC_CACHE)
+            .map((key) => caches.delete(key)) // Borra los cachpes que no sean los actuales
+    )
 });
 
 // Intercepta peticiones de red
@@ -171,106 +167,79 @@ self.addEventListener('sync', event => {
     // Si el tag del evento es 'sync-users', se llama a la función sendUserDataFromIndexedDB(), 
     //que intenta sincronizar los datos de usuarios almacenados en IndexedDB con un servidor remoto.
     if (event.tag === 'sync-users') {
-        event.waitUntil(sendTodosFromIndexedDB());
+        sendTodosFromIndexedDB();
     }
 });
 
 // Función para sincronizar datos de IndexedDB
 function sendTodosFromIndexedDB() {
-    return new Promise((resolve, reject) => {
-        const dbRequest = indexedDB.open('database');
+    const dbRequest = indexedDB.open('database');
 
-        dbRequest.onsuccess = event => {
-            const db = event.target.result;
-            const transaction = db.transaction('todos', 'readonly');
-            const objectStore = transaction.objectStore('todos');
-            const getAllRequest = objectStore.getAll();
+    dbRequest.onsuccess = event => {
+        const db = event.target.result;
+        const transaction = db.transaction('todos', 'readonly');
+        const objectStore = transaction.objectStore('todos');
+        const getAllRequest = objectStore.getAll();
 
-            getAllRequest.onsuccess = () => {
-                const todos = getAllRequest.result;
+        getAllRequest.onsuccess = () => {
+            const todos = getAllRequest.result;
 
-                if (todos.length === 0) {
-                    console.log('No hay tareas para sincronizar.');
-                    return resolve();
-                }
-
-                // Enviar cada tarea al backend
-                const promises = todos.map(todo => {
-                    return fetch('http://localhost:4000/todos/add', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(todo)
-                    })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Error en la API');
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        console.log('Tarea sincronizada con éxito:', data);
-                        eliminarTodosLosUsuarios(); // Eliminar tarea de IndexedDB tras sincronizar
-                    })
-                    .catch(error => {
-                        console.error('Error al sincronizar tarea:', error);
-                    });
-                });
-
-                Promise.all(promises).then(() => resolve()).catch(reject);
-            };
-
-            getAllRequest.onerror = event => {
-                console.error('Error al obtener tareas de IndexedDB:', event);
-                reject();
-            };
-        };
-
-        dbRequest.onerror = event => {
-            console.error('Error al abrir la base de datos:', event);
-            reject();
-        };
-    });
-}
-
-// Función para eliminar usuarios de IndexedDB
-function eliminarTodosLosUsuarios() {
-    let db = indexedDB.open('database')
-
-    db.onsuccess = event => {
-        let result = event.target.result;
-
-        let transaccion = result.transaction('todos', 'readwrite');
-        let obj = transaccion.objectStore('todos');
-        
-        // Obtenemos todos los registros de la base de datos
-        let cursorRequest = obj.openCursor();
-
-        cursorRequest.onsuccess = event => {
-            let cursor = event.target.result;
-
-            if (cursor) {
-                // Mostramos el registro en la consola
-                console.log('Usuario encontrado:', cursor.value);
-    
-                // Eliminamos el registro actual
-                let deleteRequest = cursor.delete();
-    
-                deleteRequest.onsuccess = () => {
-                    console.log(`Usuario con ID ${cursor.value.id} eliminado`);
-                };
-    
-                // Continuamos con el siguiente registro
-                cursor.continue();
-            } else {
-                // No quedan más registros
-                console.log('No hay más usuarios por eliminar.');
+            if (todos.length === 0) {
+                console.log('No hay tareas para sincronizar.');
             }
-        }
 
-        cursorRequest.onerror = event => {
-            console.error('Error al abrir el cursor:', event);
+            // Enviar cada tarea al backend
+            const promises = todos.map(todo => {
+                return fetch('http://localhost:4000/todos/add', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(todo)
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        console.log('Error en la API');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Tarea sincronizada con éxito:', data);
+                    //eliminarTodosLosUsuarios(); // Eliminar tarea de IndexedDB tras sincronizar
+                    eliminarTodoById(todo.id)
+                })
+                .catch(error => {
+                    console.error('Error al sincronizar tarea:', error);
+                });
+            });
         };
-    }
+
+        getAllRequest.onerror = event => {
+            console.error('Error al obtener tareas de IndexedDB:', event);
+        };
+    };
+
+    dbRequest.onerror = event => {
+        console.error('Error al abrir la base de datos:', event);
+    };
 }
+
+function eliminarRegistroIndexedDB(id) {
+    const request = indexedDB.open('database');
+
+    request.onerror = (event) => {
+        console.error('Error abriendo la base de datos', event);
+    };
+
+    request.onsuccess = (event) => {
+        const db = event.target.result;
+        const transaction = db.transaction('todos', 'readwrite');
+        const objectStore = transaction.objectStore('todos');
+        const deleteRequest = objectStore.delete(id);
+
+        deleteRequest.onsuccess = () => {
+            console.log(`Registro con id ${id} eliminado`);
+        };
+    };
+}
+
