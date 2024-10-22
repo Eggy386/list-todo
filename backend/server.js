@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const todoRoutes = express.Router();
 const PORT = 4000;
 let Todo = require('./todo.model');
+const suscriptionModel = require('./suscription.model');
 
 const app = express();
 
@@ -37,6 +38,7 @@ todoRoutes.route('/:id').get((req,res) => {
 });
 
 todoRoutes.route('/add').post((req,res) => {
+    console.log(req.body);
     const todo = new Todo(req.body);
     todo.save()
         .then( todo => {
@@ -46,6 +48,17 @@ todoRoutes.route('/add').post((req,res) => {
             res.status(400).send('adding new todo failed');
         });
 });
+
+todoRoutes.route('/suscription/add').post((req,res) => {
+    const suscription = new suscriptionModel(req.body);
+    suscription.save()
+    .then( suscription => {
+        res.status(200).json({'suscription': 'suscription added successfully'});
+    })
+    .catch( err => {
+        res.status(400).send('adding new suscription failed');
+    });
+})
 
 todoRoutes.route('/update/:id').post((req,res) => {
     Todo.findById(req.params.id, (err, todo) => {
