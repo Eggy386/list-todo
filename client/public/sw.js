@@ -82,6 +82,17 @@ self.addEventListener('sync', event => {
     }
 });
 
+// Listener para push
+self.addEventListener('push', event => {
+    const opciones = {
+        body:"mensaje",
+        icon:'/icon/icono1024x1024.png',
+        silent:null
+    }
+    //const not = new Notification('Luis es gay', opciones)Solo front
+    self.registration.showNotification('Luis es gay', opciones)// desde sw
+})
+
 // Función para sincronizar datos de IndexedDB
 function sendTodosFromIndexedDB() {
     const dbRequest = indexedDB.open('database');

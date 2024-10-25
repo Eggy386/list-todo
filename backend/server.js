@@ -6,6 +6,7 @@ const todoRoutes = express.Router();
 const PORT = 4000;
 let Todo = require('./todo.model');
 const suscriptionModel = require('./suscription.model');
+const { sendPush } = require('./pushServer');
 
 const app = express();
 
@@ -59,6 +60,19 @@ todoRoutes.route('/suscription/add').post((req,res) => {
         res.status(400).send('adding new suscription failed');
     });
 })
+
+// Ruta para enviar una notificación push
+todoRoutes.route('/sendPush').post((req, res) => {
+    const pushSubscription = req.body; 
+
+    sendPush(pushSubscription)
+        .then(res => {
+            res.status(200).json({ message: 'Push notification sent successfully.' });
+        })
+        .catch(err => {
+            res.status(500).json({ error: 'Failed to send push notification.' });
+        });
+});
 
 todoRoutes.route('/update/:id').post((req,res) => {
     Todo.findById(req.params.id, (err, todo) => {

@@ -111,31 +111,34 @@ export default class CreateTodo extends Component {
 
     render() {
         return (
-            <div style={{ marginTop: 20 }}>
-                <h3>Crear Nueva Tarea</h3>
-                <form onSubmit={this.onSubmit}>
-                    <div className="form-group">
-                        <label>Descripción: </label>
+            <div className="w-width-full bg-custom-background p-4 flex justify-center items-center">
+                <div className='bg-custom-conponents p-4 w-[540px] rounded-lg'>
+                <h3 className="text-3xl font-bold mb-8 text-gray-200 text-center">Crear Nueva Tarea</h3>
+                <form onSubmit={this.onSubmit} className='text-gray-200 text-lg'>
+                    <div className="my-4 flex flex-col">
+                        <label className='mb-2'>Descripción: </label>
                         <input
                             type="text"
-                            className="form-control"
+                            className="bg-custom-conponents rounded-md border border-gray-500 p-1"
                             value={this.state.todo_description}
                             onChange={this.onChangeTodoDescription}
                         />
                     </div>
-                    <div className="form-group">
-                        <label>Responsable: </label>
+                    <div className="my-4 flex flex-col">
+                        <label className='mb-2'>Responsable: </label>
                         <input
                             type="text"
-                            className="form-control"
+                            className="bg-custom-conponents rounded-md border border-gray-500 p-1"
                             value={this.state.todo_responsible}
                             onChange={this.onChangeTodoResponsible}
                         />
                     </div>
-                    <div className="form-group">
-                        <div className="form-check form-check-inline">
+                    <div className="my-4 flex flex-col">
+                        <label className='mb-2'>Prioridad:</label>
+                        <div className='flex justify-between'>
+                        <div>
                             <input
-                                className="form-check-input"
+                                className="mr-2"
                                 type="radio"
                                 name="priorityOptions"
                                 id="priorityLow"
@@ -143,11 +146,11 @@ export default class CreateTodo extends Component {
                                 checked={this.state.todo_priority === "Baja"}
                                 onChange={this.onChangeTodoPriority}
                             />
-                            <label className="form-check-label">Baja</label>
+                            <label>Baja</label>
                         </div>
-                        <div className="form-check form-check-inline">
+                        <div>
                             <input
-                                className="form-check-input"
+                                className="mr-2"
                                 type="radio"
                                 name="priorityOptions"
                                 id="priorityMedium"
@@ -155,11 +158,11 @@ export default class CreateTodo extends Component {
                                 checked={this.state.todo_priority === "Media"}
                                 onChange={this.onChangeTodoPriority}
                             />
-                            <label className="form-check-label">Media</label>
+                            <label>Media</label>
                         </div>
-                        <div className="form-check form-check-inline">
+                        <div>
                             <input
-                                className="form-check-input"
+                                className="mr-2"
                                 type="radio"
                                 name="priorityOptions"
                                 id="priorityHigh"
@@ -167,13 +170,15 @@ export default class CreateTodo extends Component {
                                 checked={this.state.todo_priority === "Alta"}
                                 onChange={this.onChangeTodoPriority}
                             />
-                            <label className="form-check-label">Alta</label>
+                            <label>Alta</label>
+                        </div>
                         </div>
                     </div>
-                    <div className="form-group">
-                        <input type="submit" value="Crear Tarea" className="btn btn-primary" />
+                    <div className="mt-4">
+                        <button type="submit" className='bg-blue-500 rounded-md p-2 font-medium text-gray-200 w-width-full text-center'>Crear Tarea</button>
                     </div>
                 </form>
+                </div>
             </div>
         );
     }

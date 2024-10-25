@@ -66,78 +66,84 @@ export default class EditTodo extends Component {
 
     render() {
         return (
-            <div>
-                <h3>Actualizar Tarea</h3>
-                <form onSubmit={this.onSubmit}>
-                    <div className="form-group">
-                        <label>Descripción: </label>
-                        <input type="text" 
-                                className="form-control"
-                                value={this.state.todo_description}
-                                onChange={this.onChangeTodoDescription}
-                                />
-                    </div>
-                    <div className="form-group">
-                        <label>Responsable: </label>
-                        <input type="text" 
-                                className="form-control"
-                                value={this.state.todo_responsible}
-                                onChange={this.onChangeTodoResponsible}
-                                />
-                    </div>
-                    <div className="form-group">
-                        <div className="form-check form-check-inline">
-                            <input  className="form-check-input"
-                                    type="radio"
-                                    name="priorityOptions"
-                                    id="priorityLow"
-                                    value="Baja"
-                                    checked={this.state.todo_priority === "Baja"}
-                                    onChange={this.onChangeTodoPriority}
+            <div className="w-width-full bg-custom-background p-4 flex justify-center items-center">
+                <div className='bg-custom-conponents p-4 w-[540px] rounded-lg'>
+                    <h3 className="text-3xl font-bold mb-8 text-gray-200 text-center">Actualizar Tarea</h3>
+                    <form onSubmit={this.onSubmit} className='text-gray-200 text-lg'>
+                        <div className="my-4 flex flex-col">
+                            <label className='mb-2'>Descripción: </label>
+                            <input type="text" 
+                                    className="bg-custom-conponents rounded-md border border-gray-500 p-1"
+                                    value={this.state.todo_description}
+                                    onChange={this.onChangeTodoDescription}
                                     />
-                            <label className="form-check-label">Baja</label>
                         </div>
-                        <div className="form-check form-check-inline">
-                            <input  className="form-check-input"
-                                    type="radio"
-                                    name="priorityOptions"
-                                    id="priorityMedium"
-                                    value="Media"
-                                    checked={this.state.todo_priority === "Media"}
-                                    onChange={this.onChangeTodoPriority}
+                        <div className="my-4 flex flex-col">
+                            <label className='mb-2'>Responsable: </label>
+                            <input type="text" 
+                                    className="bg-custom-conponents rounded-md border border-gray-500 p-1"
+                                    value={this.state.todo_responsible}
+                                    onChange={this.onChangeTodoResponsible}
                                     />
-                            <label className="form-check-label">Media</label>
                         </div>
-                        <div className="form-check form-check-inline">
-                            <input  className="form-check-input"
-                                    type="radio"
-                                    name="priorityOptions"
-                                    id="priorityHigh"
-                                    value="Alta"
-                                    checked={this.state.todo_priority === "Alta"}
-                                    onChange={this.onChangeTodoPriority}
+                        <div className="my-4 flex flex-col">
+                            <label className='mb-2'>Prioridad:</label>
+                            <div className='flex justify-between'>
+                                <div>
+                                    <input  
+                                        className="mr-2"
+                                        type="radio"
+                                        name="priorityOptions"
+                                        id="priorityLow"
+                                        value="Baja"
+                                        checked={this.state.todo_priority === "Baja"}
+                                        onChange={this.onChangeTodoPriority}
                                     />
-                            <label className="form-check-label">Alta</label>
-                        </div>
-                    </div> 
-                    <div className="form-check">
-                            <input  type="checkbox"
-                                    className="form-check-input"
+                                    <label>Baja</label>
+                                </div>
+                                <div>
+                                    <input  
+                                        className="mr-2"
+                                        type="radio"
+                                        name="priorityOptions"
+                                        id="priorityMedium"
+                                        value="Media"
+                                        checked={this.state.todo_priority === "Media"}
+                                        onChange={this.onChangeTodoPriority}
+                                    />
+                                    <label>Media</label>
+                                </div>
+                                <div>
+                                    <input  
+                                        className="mr-2"
+                                        type="radio"
+                                        name="priorityOptions"
+                                        id="priorityHigh"
+                                        value="Alta"
+                                        checked={this.state.todo_priority === "Alta"}
+                                        onChange={this.onChangeTodoPriority}
+                                    />
+                                    <label>Alta</label>
+                                </div>
+                            </div>
+                        </div> 
+                        <div className="my-4">
+                                <input  
+                                    type="checkbox"
+                                    className="mr-2"
                                     id="completedCheckbox"
                                     name="completedCheckbox"
                                     onChange={this.onChangeTodoCompleted}
                                     checked={this.state.todo_completed}
                                     value={this.state.todo_completed}
-                                    />
-                            <label className="form-check-label" htmlFor="completedCheckbox">
-                                Completada
-                            </label>
+                                />
+                                <label htmlFor="completedCheckbox" className='text-xl font-bold'>Completada</label>
+                            </div>
+                            <div className="mt-4">
+                            <button type="submit" className='bg-blue-500 rounded-md p-2 font-medium text-gray-200 w-width-full text-center'>Actualizar</button>
                         </div>
-                        <br />
-                        <div className="form-group">
-                            <input type="submit" value="Actualizar tarea" className="btn btn-primary" />
-                        </div>
-                </form>
+                    </form>
+                </div>
             </div>
         )
     }
