@@ -1,6 +1,8 @@
 import React , { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import axios from 'axios';
+import NavBar from './navbar.component';
+
 
 const getPriorityColor = (priority) => {
     switch (priority) {
@@ -15,25 +17,44 @@ const getPriorityColor = (priority) => {
     }
 };
 
-const Todo = (props) => (
-    <div className="bg-custom-conponents shadow-md rounded-lg p-6 mb-4 border border-gray-500">
-      <h3 className="text-2xl font-semibold text-gray-200">{props.todo.todo_description}</h3>
+const Todo = (props) => {
+  const isCompleted = props.todo.todo_completed;
+
+  return (
+    <div className={`shadow-md rounded-lg p-6 mb-4 border border-gray-500 
+                     ${isCompleted ? 'bg-gray-700' : 'bg-custom-conponents'}`}>
+      <h3 className={`text-2xl font-semibold ${isCompleted ? 'text-gray-400 line-through' : 'text-gray-200'}`}>
+        {props.todo.todo_description}
+      </h3>
       <div className="mt-4 flex justify-between">
-        <p className="text-gray-500">{props.todo.todo_completed === true ? 'Completado' : 'En Progreso'}</p>
-        <span className={`px-3 py-1 rounded-full text-white text-sm ${getPriorityColor(props.todo.todo_priority)}`}>
+        <p className={`text-xl font-semibold  ${isCompleted ? 'text-green-500' : 'text-gray-500'}`}>
+          {isCompleted ? 'Completado' : 'En Progreso'}
+        </p>
+        <span className={isCompleted ? 'hidden' : `px-3 py-1 rounded-full text-white text-sm ${getPriorityColor(props.todo.todo_priority)}`}>
           {props.todo.todo_priority}
         </span>
       </div>
-      <div className="items-center mt-4 text-gray-800">
+      <div className="items-center mt-4">
         <p className='text-gray-500'>Responsable</p>
-        <p className='text-gray-200 text-xl font-medium'>{props.todo.todo_responsible}</p>
+        <p className={`${isCompleted ? 'text-gray-400' : 'text-gray-200'} text-xl font-medium`}>
+          {props.todo.todo_responsible}
+        </p>
       </div>
-      <div className="flex items-center mt-4 w-width-full justify-between">
-          <button className='bg-custom-conponents border-2 border-blue-500 rounded-md p-2 font-medium text-blue-500 w-[45%]'>Eliminar</button>
-          <Link to={"/edit/" + props.todo._id} className='bg-blue-500 rounded-md p-2 font-medium text-gray-200 w-[45%] text-center'>Editar</Link>
+      <div className="flex items-center mt-4 justify-between">
+        <button className={`border-2 rounded-md p-2 font-medium w-[45%] 
+                            ${isCompleted ? 'hidden' : 'bg-custom-conponents border-blue-500 text-blue-500'}`}>
+          Eliminar
+        </button>
+        <Link to={"/edit/" + props.todo._id} 
+              className={`rounded-md p-2 font-medium w-[45%] text-center 
+                          ${isCompleted ? 'hidden' : 'bg-blue-500 text-gray-200'}`}>
+          Editar
+        </Link>
       </div>
     </div>
   );
+};
+
 
 
 export default class TodosList extends Component {
@@ -51,7 +72,8 @@ export default class TodosList extends Component {
 
     // Evitar que las consultas se hagan de forma continua en cada actualización
     loadTodos() {
-        axios.get('http://localhost:4000/todos')
+      const userId = localStorage.getItem('userId')
+        axios.get(`http://localhost:4000/todos/${userId}`)
             .then( res => {
                 this.setState({
                     todos: res.data
@@ -68,6 +90,7 @@ export default class TodosList extends Component {
     render() {
         return (
             <div className="w-width-full bg-custom-background p-4">
+              <NavBar/>
                 <h3 className="text-3xl font-bold mb-4 text-gray-200">Tareas</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {this.todoList()}

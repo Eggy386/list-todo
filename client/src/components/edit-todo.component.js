@@ -1,90 +1,86 @@
-import React , { Component } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useParams, useNavigate } from 'react-router-dom';
+import NavBar from './navbar.component';
 
-export default class EditTodo extends Component {
+const EditTodo = () => {
+    const { id } = useParams();
+    const userId = localStorage.getItem('userId')
+    const navigate = useNavigate();
+    const [todo, setTodo] = useState({
+        todo_description: '',
+        todo_responsible: '',
+        todo_priority: '',
+        todo_completed: false
+    });
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            todo_description: '',
-            todo_responsible: '',
-            todo_priority: '',
-            todo_completed: false
-        }
-    }
+    console.log(id)
 
-    componentDidMount() {
-        axios.get('http://localhost:4000/todos/' + this.props.match.params.id)
-            .then( res => {
-                this.setState({
-                    todo_description: res.data.todo_description,
-                    todo_responsible: res.data.todo_responsible,
-                    todo_priority: res.data.todo_priority,
-                    todo_completed: res.data.todo_completed
-                })
+    useEffect(() => {
+        axios.get(`http://localhost:4000/todos/todo/${id}`)
+            .then(res => {
+                console.log(res)
+                setTodo({
+                    todo_description: res.data.todo_description || '',
+                    todo_responsible: res.data.todo_responsible || '',
+                    todo_priority: res.data.todo_priority || '',
+                    todo_completed: res.data.todo_completed || false
+                });
             })
-            .catch( err => console.log(err));
-    }
+            .catch(err => console.log(err));
+    }, [id]);
 
-    onChangeTodoDescription = (e) => {
-        this.setState({
-            todo_description: e.target.value
-        });
-    }
+    const onChangeTodoDescription = (e) => {
+        setTodo({ ...todo, todo_description: e.target.value });
+    };
 
-    onChangeTodoResponsible = (e) => {
-        this.setState({
-            todo_responsible: e.target.value
-        });
-    }
+    const onChangeTodoResponsible = (e) => {
+        setTodo({ ...todo, todo_responsible: e.target.value });
+    };
 
-    onChangeTodoPriority = (e) => {
-        this.setState({
-            todo_priority: e.target.value
-        });
-    }
+    const onChangeTodoPriority = (e) => {
+        setTodo({ ...todo, todo_priority: e.target.value });
+    };
 
-    onChangeTodoCompleted = (e) => {
-        this.setState({
-            todo_completed: !this.state.todo_completed
-        });
-    }
+    const onChangeTodoCompleted = () => {
+        setTodo({ ...todo, todo_completed: !todo.todo_completed });
+    };
 
-    onSubmit = (e) => {
+    const onSubmit = (e) => {
         e.preventDefault();
         const obj = {
-            todo_description: this.state.todo_description,
-            todo_responsible: this.state.todo_responsible,
-            todo_priority: this.state.todo_priority,
-            todo_completed: this.state.todo_completed
+            todo_description: todo.todo_description,
+            todo_responsible: todo.todo_responsible,
+            todo_priority: todo.todo_priority,
+            todo_completed: todo.todo_completed
         };
-        axios.post('http://localhost:4000/todos/update/' + this.props.match.params.id, obj)
-            .then( res => console.log(res.data));
+        axios.post(`http://localhost:4000/todos/update/${id}`, obj)
+            .then(() => navigate(`/${userId}`))
+            .catch(err => console.log(err));
+    };
 
-        this.props.history.push('/');
-    }
-
-    render() {
-        return (
-            <div className="w-width-full bg-custom-background p-4 flex justify-center items-center">
-                <div className='bg-custom-conponents p-4 w-[540px] rounded-lg'>
-                    <h3 className="text-3xl font-bold mb-8 text-gray-200 text-center">Actualizar Tarea</h3>
-                    <form onSubmit={this.onSubmit} className='text-gray-200 text-lg'>
-                        <div className="my-4 flex flex-col">
+    return (
+        <div className="w-width-full bg-custom-background p-4">
+            <NavBar/>
+            <div className='flex justify-center items-center'>
+            <div className='bg-custom-conponents p-4 w-[540px] rounded-lg'>
+                <h3 className="text-3xl font-bold mb-8 text-gray-200 text-center">Actualizar Tarea</h3>
+                <form onSubmit={onSubmit} className='text-gray-200 text-lg'>
+                <div className="my-4 flex flex-col">
                             <label className='mb-2'>Descripción: </label>
                             <input type="text" 
-                                    className="bg-custom-conponents rounded-md border border-gray-500 p-1"
-                                    value={this.state.todo_description}
-                                    onChange={this.onChangeTodoDescription}
-                                    />
+                                   className="bg-custom-conponents rounded-md border border-gray-500 p-1"
+                                   value={todo.todo_description || ''}
+                                   onChange={onChangeTodoDescription}
+                            />
                         </div>
                         <div className="my-4 flex flex-col">
                             <label className='mb-2'>Responsable: </label>
                             <input type="text" 
-                                    className="bg-custom-conponents rounded-md border border-gray-500 p-1"
-                                    value={this.state.todo_responsible}
-                                    onChange={this.onChangeTodoResponsible}
-                                    />
+                                   className="bg-custom-conponents rounded-md border border-gray-500 p-1"
+                                   value={todo.todo_responsible || ''}
+                                   onChange={onChangeTodoResponsible}
+                            />
                         </div>
                         <div className="my-4 flex flex-col">
                             <label className='mb-2'>Prioridad:</label>
@@ -96,8 +92,8 @@ export default class EditTodo extends Component {
                                         name="priorityOptions"
                                         id="priorityLow"
                                         value="Baja"
-                                        checked={this.state.todo_priority === "Baja"}
-                                        onChange={this.onChangeTodoPriority}
+                                        checked={todo.todo_priority === "Baja"}
+                                        onChange={onChangeTodoPriority}
                                     />
                                     <label>Baja</label>
                                 </div>
@@ -108,8 +104,8 @@ export default class EditTodo extends Component {
                                         name="priorityOptions"
                                         id="priorityMedium"
                                         value="Media"
-                                        checked={this.state.todo_priority === "Media"}
-                                        onChange={this.onChangeTodoPriority}
+                                        checked={todo.todo_priority === "Media"}
+                                        onChange={onChangeTodoPriority}
                                     />
                                     <label>Media</label>
                                 </div>
@@ -120,31 +116,32 @@ export default class EditTodo extends Component {
                                         name="priorityOptions"
                                         id="priorityHigh"
                                         value="Alta"
-                                        checked={this.state.todo_priority === "Alta"}
-                                        onChange={this.onChangeTodoPriority}
+                                        checked={todo.todo_priority === "Alta"}
+                                        onChange={onChangeTodoPriority}
                                     />
                                     <label>Alta</label>
                                 </div>
                             </div>
                         </div> 
                         <div className="my-4">
-                                <input  
-                                    type="checkbox"
-                                    className="mr-2"
-                                    id="completedCheckbox"
-                                    name="completedCheckbox"
-                                    onChange={this.onChangeTodoCompleted}
-                                    checked={this.state.todo_completed}
-                                    value={this.state.todo_completed}
-                                />
-                                <label htmlFor="completedCheckbox" className='text-xl font-bold'>Completada</label>
-                            </div>
-                            <div className="mt-4">
-                            <button type="submit" className='bg-blue-500 rounded-md p-2 font-medium text-gray-200 w-width-full text-center'>Actualizar</button>
+                            <input  
+                                type="checkbox"
+                                className="mr-2"
+                                id="completedCheckbox"
+                                name="completedCheckbox"
+                                onChange={onChangeTodoCompleted}
+                                checked={todo.todo_completed || false}
+                            />
+                            <label htmlFor="completedCheckbox" className='text-xl font-bold'>Completada</label>
                         </div>
-                    </form>
-                </div>
+                    <div className="mt-4">
+                        <button type="submit" className='bg-blue-500 rounded-md p-2 font-medium text-gray-200 w-width-full text-center'>Actualizar</button>
+                    </div>
+                </form>
             </div>
-        )
-    }
+            </div>
+        </div>
+    );
 }
+
+export default EditTodo;

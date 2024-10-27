@@ -13,6 +13,11 @@ let Todo = new Schema({
     },
     todo_completed: {
         type: Boolean
+    },
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'users',
+        required: true
     }
 });
 

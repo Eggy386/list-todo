@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import NavBar from './navbar.component';
 
 export default class CreateTodo extends Component {
 
@@ -34,9 +35,11 @@ export default class CreateTodo extends Component {
             todo_description: this.state.todo_description,
             todo_responsible: this.state.todo_responsible,
             todo_priority: this.state.todo_priority,
-            todo_completed: this.state.todo_completed
+            todo_completed: this.state.todo_completed,
+            userId: localStorage.getItem('userId')
         };
 
+        console.log(newTodo)
         // Intenta enviar los datos al servidor
         fetch('http://localhost:4000/todos/add', {
             method: 'POST',
@@ -111,7 +114,9 @@ export default class CreateTodo extends Component {
 
     render() {
         return (
-            <div className="w-width-full bg-custom-background p-4 flex justify-center items-center">
+            <div className="w-width-full bg-custom-background p-4">
+                <NavBar/>
+                <div className='w-width-full flex items-center justify-center'>
                 <div className='bg-custom-conponents p-4 w-[540px] rounded-lg'>
                 <h3 className="text-3xl font-bold mb-8 text-gray-200 text-center">Crear Nueva Tarea</h3>
                 <form onSubmit={this.onSubmit} className='text-gray-200 text-lg'>
@@ -178,6 +183,7 @@ export default class CreateTodo extends Component {
                         <button type="submit" className='bg-blue-500 rounded-md p-2 font-medium text-gray-200 w-width-full text-center'>Crear Tarea</button>
                     </div>
                 </form>
+                </div>
                 </div>
             </div>
         );
