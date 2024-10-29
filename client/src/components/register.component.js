@@ -106,16 +106,16 @@ export default class Register extends Component {
   }
   render() {
     return (
-      <div className='grid grid-cols-2 min-h-screen bg-custom-background'>
-        <div className='p-6 flex flex-col justify-center items-center bg-white'>
+      <div className='grid g:grid-cols-2 grid-cols-1 min-h-screen bg-custom-background'>
+        <div className='p-6 lg:flex flex-col justify-center items-center bg-white hidden'>
           <div className='flex items-center mb-12'>
             <img src={logo} alt='logo' className='h-16 mr-4'/>
             <h3 className='text-5xl font-bold'>ToDoX</h3>
           </div>
           <Image className='object-contain'/>
         </div>
-        <div className='p-8 flex items-center justify-center'>
-          <div className='bg-custom-conponents rounded-xl p-6 w-width-full'>
+        <div className='lg:p-8 md:p-8 p-0flex items-center justify-center'>
+          <div className='bg-custom-conponents lg:rounded-xl md:rounded-xl rounded-none p-6 w-width-full lg:size-auto md:size-auto h-screen'>
             <h3 className='text-center text-white font-semibold text-4xl my-12'>Regístro</h3>
             <form className='text-gray-200 text-xl' onSubmit={this.onSubmit}>
               <div className="my-8 flex flex-col">
@@ -152,8 +152,8 @@ export default class Register extends Component {
                 <button type="submit" className='bg-blue-500 rounded-md p-2 font-semibold text-gray-200 w-width-full text-center'>Registrarse</button>
               </div>
             </form>
-            <div className='flex text-xl text-white justify-center mt-2'>
-              <p>¿Ya tienes una cuenta?</p><Link to={'/'} className='ml-2 text-blue-500 font-semibold'>Inicia sesión</Link>
+            <div className='flex lg:text-xl md:text-xl text-lg text-white text-center justify-center mt-2'>
+              <p>¿Ya tienes una cuenta?<Link to={'/'} className='ml-2 text-blue-500 font-semibold'>Inicia sesión</Link></p>
             </div>
           </div>
         </div>

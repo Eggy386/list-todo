@@ -114,9 +114,9 @@ class Login extends Component {
 
   render() {
     return (
-      <div className='grid grid-cols-2 min-h-screen bg-custom-background'>
-        <div className='p-8 flex items-center justify-center'>
-          <div className='bg-custom-conponents rounded-xl p-6 w-width-full'>
+      <div className='grid lg:grid-cols-2 grid-cols-1 min-h-screen bg-custom-background'>
+        <div className='lg:p-8 md:p-8 p-0flex items-center justify-center'>
+          <div className='bg-custom-conponents lg:rounded-xl md:rounded-xl rounded-none p-6 w-width-full lg:size-auto md:size-auto h-screen'>
             <h3 className='text-center text-white font-semibold text-4xl my-12'>Inicia Sesión</h3>
             <form className='text-gray-200 text-xl' onSubmit={this.onSubmit}>
               <div className="my-8 flex flex-col">
@@ -143,12 +143,12 @@ class Login extends Component {
                 <button type="submit" className='bg-blue-500 rounded-md p-2 font-semibold text-gray-200 w-width-full text-center'>Iniciar Sesión</button>
               </div>
             </form>
-            <div className='flex text-xl text-white justify-center mt-2'>
-              <p>¿No tienes una cuenta?</p><Link to={'/register'} className='ml-2 text-blue-500 font-semibold'>Regístrate</Link>
+            <div className='flex lg:text-xl md:text-xl text-lg text-white text-center justify-center mt-2'>
+              <p>¿No tienes una cuenta?<Link to={'/register'} className='ml-2 text-blue-500 font-semibold'>Regístrate</Link></p>
             </div>
           </div>
         </div>
-        <div className='p-6 flex flex-col justify-center items-center bg-white'>
+        <div className='p-6 lg:flex flex-col justify-center items-center bg-white hidden'>
           <div className='flex items-center mb-12'>
             <img src={logo} alt='logo' className='h-16 mr-4'/>
             <h3 className='text-5xl font-bold'>ToDoX</h3>
