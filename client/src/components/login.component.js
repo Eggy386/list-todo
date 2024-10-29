@@ -41,7 +41,8 @@ class Login extends Component {
       contrasena: this.state.contrasena
     };
 
-    fetch('http://localhost:4000/todos/login', {
+    const urlServer = process.env.REACT_APP_URL_SERVER; 
+    fetch(`${urlServer}/todos/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

@@ -17,7 +17,8 @@ const EditTodo = () => {
     console.log(id)
 
     useEffect(() => {
-        axios.get(`http://localhost:4000/todos/todo/${id}`)
+        const urlServer = process.env.REACT_APP_URL_SERVER;
+        axios.get(`${urlServer}/todos/todo/${id}`)
             .then(res => {
                 console.log(res)
                 setTodo({
@@ -54,7 +55,8 @@ const EditTodo = () => {
             todo_priority: todo.todo_priority,
             todo_completed: todo.todo_completed
         };
-        axios.post(`http://localhost:4000/todos/update/${id}`, obj)
+        const urlServer = process.env.REACT_APP_URL_SERVER;
+        axios.post(`${urlServer}/todos/update/${id}`, obj)
             .then(() => navigate(`/${userId}`))
             .catch(err => console.log(err));
     };

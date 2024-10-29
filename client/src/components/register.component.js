@@ -41,7 +41,8 @@ export default class Register extends Component {
       contrasena: this.state.contrasena
     };
 
-    fetch('http://localhost:4000/todos/register', {
+    const urlServer = process.env.REACT_APP_URL_SERVER;
+    fetch(`${urlServer}/todos/register`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

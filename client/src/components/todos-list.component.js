@@ -73,7 +73,8 @@ export default class TodosList extends Component {
     // Evitar que las consultas se hagan de forma continua en cada actualización
     loadTodos() {
       const userId = localStorage.getItem('userId')
-        axios.get(`http://localhost:4000/todos/${userId}`)
+      const urlServer = process.env.REACT_APP_URL_SERVER;
+        axios.get(`${urlServer}/todos/${userId}`)
             .then( res => {
                 this.setState({
                     todos: res.data

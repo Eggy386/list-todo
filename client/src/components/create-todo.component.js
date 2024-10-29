@@ -40,8 +40,10 @@ export default class CreateTodo extends Component {
         };
 
         console.log(newTodo)
+
+        const urlServer = process.env.REACT_APP_URL_SERVER;        
         // Intenta enviar los datos al servidor
-        fetch('http://localhost:4000/todos/add', {
+        fetch(`${urlServer}/todos/add`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
