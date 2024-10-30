@@ -74,7 +74,8 @@ export default class TodosList extends Component {
     loadTodos() {
       const userId = localStorage.getItem('userId')
       const urlServer = process.env.REACT_APP_URL_SERVER;
-        axios.get(`${urlServer}/todos/${userId}`)
+      const backendUrl = process.env.REACT_APP_BACKEND_URL;
+        axios.get(`${backendUrl}/todos/${userId}`)
             .then( res => {
                 this.setState({
                     todos: res.data

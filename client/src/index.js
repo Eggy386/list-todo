@@ -34,7 +34,8 @@ if ('serviceWorker' in navigator && 'SyncManager' in window) {
                     console.log('Subscription:', resp);
                     
                     // Envía la suscripción a tu servidor
-                    fetch('http://localhost:4000/todos/suscription/add', {
+                    const backendUrl = process.env.REACT_APP_BACKEND_URL;
+                    fetch(`${backendUrl}/todos/suscription/add`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'

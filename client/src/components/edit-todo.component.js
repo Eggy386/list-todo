@@ -18,7 +18,8 @@ const EditTodo = () => {
 
     useEffect(() => {
         const urlServer = process.env.REACT_APP_URL_SERVER;
-        axios.get(`${urlServer}/todos/todo/${id}`)
+        const backendUrl = process.env.REACT_APP_BACKEND_URL;
+        axios.get(`${backendUrl}/todos/todo/${id}`)
             .then(res => {
                 console.log(res)
                 setTodo({
@@ -56,7 +57,8 @@ const EditTodo = () => {
             todo_completed: todo.todo_completed
         };
         const urlServer = process.env.REACT_APP_URL_SERVER;
-        axios.post(`${urlServer}/todos/update/${id}`, obj)
+        const backendUrl = process.env.REACT_APP_BACKEND_URL;
+        axios.post(`${backendUrl}/todos/update/${id}`, obj)
             .then(() => navigate(`/${userId}`))
             .catch(err => console.log(err));
     };

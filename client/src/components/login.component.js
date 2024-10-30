@@ -42,7 +42,8 @@ class Login extends Component {
     };
 
     const urlServer = process.env.REACT_APP_URL_SERVER; 
-    fetch(`${urlServer}/todos/login`, {
+    const backendUrl = process.env.REACT_APP_BACKEND_URL;
+    fetch(`${backendUrl}/todos/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -115,8 +116,8 @@ class Login extends Component {
   render() {
     return (
       <div className='grid lg:grid-cols-2 grid-cols-1 min-h-screen bg-custom-background'>
-        <div className='lg:p-8 md:p-8 p-0flex items-center justify-center'>
-          <div className='bg-custom-conponents lg:rounded-xl md:rounded-xl rounded-none p-6 w-width-full lg:size-auto md:size-auto h-screen'>
+        <div className='lg:p-12 md:p-8 p-0 flex items-center justify-center'>
+          <div className='bg-custom-conponents lg:rounded-xl md:rounded-xl rounded-none p-6 w-width-full lg:w-width-full lg:h-auto md:w-width-full md:h-auto h-screen'>
             <h3 className='text-center text-white font-semibold text-4xl my-12'>Inicia Sesión</h3>
             <form className='text-gray-200 text-xl' onSubmit={this.onSubmit}>
               <div className="my-8 flex flex-col">

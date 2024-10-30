@@ -41,9 +41,10 @@ export default class CreateTodo extends Component {
 
         console.log(newTodo)
 
-        const urlServer = process.env.REACT_APP_URL_SERVER;        
+        const urlServer = process.env.REACT_APP_URL_SERVER;  
+        const backendUrl = process.env.REACT_APP_BACKEND_URL;      
         // Intenta enviar los datos al servidor
-        fetch(`${urlServer}/todos/add`, {
+        fetch(`${backendUrl}/todos/add`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

@@ -42,7 +42,8 @@ export default class Register extends Component {
     };
 
     const urlServer = process.env.REACT_APP_URL_SERVER;
-    fetch(`${urlServer}/todos/register`, {
+    const backendUrl = process.env.REACT_APP_BACKEND_URL;
+    fetch(`${backendUrl}/todos/register`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
