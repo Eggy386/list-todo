@@ -113,7 +113,13 @@ todoRoutes.route('/add').post((req,res) => {
 });
 
 todoRoutes.route('/suscription/add').post((req,res) => {
-    const suscription = new suscriptionModel(req.body);
+    // Crea una nueva suscripción con los datos del cuerpo de la solicitud, que ahora incluye `userId`
+    const suscription = new suscriptionModel({
+        endpoint: req.body.endpoint,
+        expirationTime: req.body.expirationTime,
+        keys: req.body.keys,
+        userId: req.body.userId // Asigna el userId desde el req.body
+    });
     suscription.save()
     .then( suscription => {
         res.status(200).json({'suscription': 'suscription added successfully'});

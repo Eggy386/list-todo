@@ -22,45 +22,45 @@ if ('serviceWorker' in navigator && 'SyncManager' in window) {
   window.addEventListener('load', () => {
       navigator.serviceWorker.register('/sw.js').then(reg => {
         console.log('Service Worker registrado:', reg);
-        if(Notification.permission==='default'){
-          Notification.requestPermission(permiso => {
-              if (permiso === 'granted') {
-                  reg.pushManager.subscribe({
-                      userVisibleOnly: true,
-                      applicationServerKey:"BF0R56KJLXyBC-WUGXWLFyuZmRhcCMn41E_rEGALwDugm0wN6PfIuCo2PzzlaDwvgvgTy_uheK-TDZ-llHWJ7dY"
-                  })
-                  .then(resp=>resp.toJSON())
-                  .then(resp => {
-                    console.log('Subscription:', resp);
+      //   if(Notification.permission==='default'){
+      //     Notification.requestPermission(permiso => {
+      //         if (permiso === 'granted') {
+      //             reg.pushManager.subscribe({
+      //                 userVisibleOnly: true,
+      //                 applicationServerKey:"BF0R56KJLXyBC-WUGXWLFyuZmRhcCMn41E_rEGALwDugm0wN6PfIuCo2PzzlaDwvgvgTy_uheK-TDZ-llHWJ7dY"
+      //             })
+      //             .then(resp=>resp.toJSON())
+      //             .then(resp => {
+      //               console.log('Subscription:', resp);
                     
-                    // Envía la suscripción a tu servidor
-                    const backendUrl = process.env.REACT_APP_BACKEND_URL;
-                    fetch(`${backendUrl}/todos/suscription/add`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(resp)
-                    })
-                    .then(response => {
-                      if (!response.ok) {
-                        throw new Error('Error en la solicitud: ' + response.statusText);
-                      }
-                      return response.json();
-                    })
-                    .then(data => {
-                        console.log('Suscripción guardada en la BD:', data);
-                    })
-                    .catch(error => {
-                      console.log(error)
-                        console.error('Error al enviar la suscripción:', error);
-                    });
-                });
-              } else {
-                  console.log("El usuario no registró")
-              }
-          });
-      }
+      //               // Envía la suscripción a tu servidor
+      //               const backendUrl = process.env.REACT_APP_BACKEND_URL;
+      //               fetch(`${backendUrl}/todos/suscription/add`, {
+      //                   method: 'POST',
+      //                   headers: {
+      //                       'Content-Type': 'application/json'
+      //                   },
+      //                   body: JSON.stringify(resp)
+      //               })
+      //               .then(response => {
+      //                 if (!response.ok) {
+      //                   throw new Error('Error en la solicitud: ' + response.statusText);
+      //                 }
+      //                 return response.json();
+      //               })
+      //               .then(data => {
+      //                   console.log('Suscripción guardada en la BD:', data);
+      //               })
+      //               .catch(error => {
+      //                 console.log(error)
+      //                   console.error('Error al enviar la suscripción:', error);
+      //               });
+      //           });
+      //         } else {
+      //             console.log("El usuario no registró")
+      //         }
+      //     });
+      // }
       }).catch(err => console.error('Error al registrar el Service Worker:', err));
   });
 }

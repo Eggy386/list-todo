@@ -19,6 +19,11 @@ let Suscription = new Schema({
           type: String,
           required: true
         }
+    },
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'users',
+        required: true
     }
 });
 

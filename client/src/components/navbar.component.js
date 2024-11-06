@@ -15,15 +15,21 @@ export default class NavBar extends Component {
       isNavbarOpen: !prevState.isNavbarOpen // Alterna el estado
     }));
   };
+
+  // Función para cerrar sesión
+  handleLogout = () => {
+    localStorage.removeItem('userId'); // Elimina el userId de localStorage
+    window.location.href = '/'; // Redirige al usuario a la página de inicio
+  };
   render() {
     const userId = localStorage.getItem('userId')
     return (
         <div className='w-width-full mb-4 mx-auto bg-custom-background'>
         <nav className='flex flex-row w-width-full items-center justify-between py-2 px-4'>
-          <Link to='/'>
+          <Link to={`/${userId}`}>
             <img src={logo} className='size-10' alt='logo' />
           </Link>
-          <Link to='/' className='text-4xl font-semibold text-gray-200'>
+          <Link to={`/${userId}`} className='text-4xl font-semibold text-gray-200'>
             ToDoX
           </Link>
           <button
@@ -48,6 +54,11 @@ export default class NavBar extends Component {
               </li>
               <li>
                 <Link to={`/${userId}/create`}>Crear Tarea</Link>
+              </li>
+              <li>
+                <button onClick={this.handleLogout} className="text-left">
+                  Cerrar Sesión
+                </button>
               </li>
             </ul>
           </div>
