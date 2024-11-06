@@ -43,7 +43,7 @@ class Login extends Component {
 
     const urlServer = process.env.REACT_APP_URL_SERVER; 
     const backendUrl = process.env.REACT_APP_BACKEND_URL;
-    fetch(`${backendUrl}/todos/login`, {
+    fetch(`${urlServer}/todos/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
