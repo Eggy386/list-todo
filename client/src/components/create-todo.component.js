@@ -43,7 +43,7 @@ export default class CreateTodo extends Component {
         const urlLocal = process.env.REACT_APP_URL_SERVER
     
         try {
-            const response = await fetch(`${urlLocal}/todos/add`, {
+            const response = await fetch(`${backendUrl}/todos/add`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(newTodo)
@@ -54,7 +54,7 @@ export default class CreateTodo extends Component {
             const todoData = await response.json();
     
             // Enviar notificación push con descripción de la tarea
-            await fetch(`${urlLocal}/todos/sendNotification`, {
+            await fetch(`${backendUrl}/todos/sendNotification`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
