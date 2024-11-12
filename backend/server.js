@@ -129,17 +129,68 @@ todoRoutes.route('/suscription/add').post((req,res) => {
     });
 })
 
-// Ruta para enviar una notificación push
-todoRoutes.route('/sendPush').post((req, res) => {
-    const pushSubscription = req.body; 
+todoRoutes.route('/sendPush').post(async (req, res) => {
+    const { userId, message } = req.body;
 
-    sendPush(pushSubscription)
-        .then(res => {
-            res.status(200).json({ message: 'Push notification sent successfully.' });
-        })
-        .catch(err => {
-            res.status(500).json({ error: 'Failed to send push notification.' });
-        });
+    try {
+        // Busca la suscripción en la base de datos por userId
+        const subscription = await suscriptionModel.findOne({ userId });
+        
+        if (!subscription) {
+            return res.status(404).json({ error: 'No se encontró la suscripción para el userId especificado.' });
+        }
+
+        // Envía la notificación push
+        await sendPush(subscription, message);
+        res.status(200).json({ message: 'Notificación push enviada con éxito.' });
+
+    } catch (error) {
+        console.error('Error al enviar la notificación push:', error);
+        res.status(500).json({ error: 'Error al enviar la notificación push.' });
+    }
+});
+
+todoRoutes.route('/sendNotification').post(async (req, res) => {
+    const { userId, message } = req.body;
+
+    try {
+        const subscription = await suscriptionModel.findOne({ userId });
+        if (!subscription) {
+            return res.status(404).json({ error: 'No subscription found for the specified userId.' });
+        }
+
+        await sendPush(subscription, message);
+        res.status(200).json({ message: 'Push notification sent successfully.' });
+    } catch (error) {
+        console.error('Error sending push notification:', error);
+        res.status(500).json({ error: 'Failed to send push notification.' });
+    }
+});
+
+// Endpoint para enviar notificación a todas las suscripciones
+todoRoutes.route('/sendNotificationToAll').post(async (req, res) => {
+    const { message } = req.body;
+
+    try {
+        // Obtiene todas las suscripciones de la base de datos
+        const subscriptions = await suscriptionModel.find();
+
+        if (!subscriptions.length) {
+            return res.status(404).json({ error: 'No se encontraron suscripciones.' });
+        }
+
+        const notifications = subscriptions.map((subscription) => 
+            sendPush(subscription, message)
+                .catch((error) => console.error('Error al enviar a una suscripción:', error))
+        );
+
+        await Promise.all(notifications);
+        res.status(200).json({ message: 'Notificación enviada a todas las suscripciones.' });
+
+    } catch (error) {
+        console.error('Error al enviar las notificaciones:', error);
+        res.status(500).json({ error: 'Error al enviar las notificaciones.' });
+    }
 });
 
 todoRoutes.route('/update/:id').post((req,res) => {

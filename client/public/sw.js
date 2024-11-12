@@ -84,14 +84,28 @@ self.addEventListener('sync', event => {
 
 // Listener para push
 self.addEventListener('push', event => {
-    const opciones = {
-        body:"mensaje",
-        icon:'/icon/icono1024x1024.png',
-        silent:null
+    let data = { title: 'ToDoX', body: 'Nuevo mensaje' };
+
+    if (event.data) {
+        console.log("Contenido del evento push:", event.data.text()); // Verifica qué se recibe
+        try {
+            data = event.data.json();
+        } catch (error) {
+            console.error("Error al parsear el JSON:", error);
+            data.body = event.data.text();
+            console.log(data.body)
+        }
     }
-    //const not = new Notification('Luis es gay', opciones)Solo front
-    self.registration.showNotification('Luis es gay', opciones)// desde sw
-})
+
+    const opciones = {
+        body: data.body,
+        icon: '/icon/icono1024x1024.png',
+        silent: null
+    };
+
+    self.registration.showNotification(data.title, opciones);
+});
+
 
 // Función para sincronizar datos de IndexedDB
 function sendTodosFromIndexedDB() {

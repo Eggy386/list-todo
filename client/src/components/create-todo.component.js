@@ -28,9 +28,9 @@ export default class CreateTodo extends Component {
     }
 
     // Función para manejar el envío del formulario
-    onSubmit = e => {
+    onSubmit = async e => {
         e.preventDefault();
-
+    
         const newTodo = {
             todo_description: this.state.todo_description,
             todo_responsible: this.state.todo_responsible,
@@ -38,49 +38,49 @@ export default class CreateTodo extends Component {
             todo_completed: this.state.todo_completed,
             userId: localStorage.getItem('userId')
         };
-
-        console.log(newTodo)
-
-        const urlServer = process.env.REACT_APP_URL_SERVER;  
-        const backendUrl = process.env.REACT_APP_BACKEND_URL;      
-        // Intenta enviar los datos al servidor
-        fetch(`${backendUrl}/todos/add`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(newTodo)
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Error en la API');
-            }
-            return response.json();
-        })
-        .catch(error => {
-            console.error('Error en la petición, guardando localmente:', error);
-            if ('serviceWorker' in navigator && 'SyncManager' in window) {
-                navigator.serviceWorker.ready.then(sw => {
-                    return sw.sync.register('sync-todos');
-                }).then(() => {
-                    console.log('Sincronización registrada');
-                }).catch(err => console.error('Error al registrar la sincronización:', err));
-            }            
-            // Guardar en IndexedDB si la petición falla
-            this.saveTodoToIndexedDB(newTodo)
-                .then(() => {
-                    console.log('Tarea guardada en IndexedDB debido a la falla en la red');
+    
+        const backendUrl = process.env.REACT_APP_BACKEND_URL;
+        const urlLocal = process.env.REACT_APP_URL_SERVER
+    
+        try {
+            const response = await fetch(`${urlLocal}/todos/add`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(newTodo)
+            });
+    
+            if (!response.ok) throw new Error('Error en la API');
+    
+            const todoData = await response.json();
+    
+            // Enviar notificación push con descripción de la tarea
+            await fetch(`${urlLocal}/todos/sendNotification`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    userId: newTodo.userId,
+                    message: newTodo.todo_description
                 })
-                .catch(err => console.error('Error al guardar en IndexedDB:', err));
-        });
-
+            });
+    
+            console.log('Notificación enviada');
+        } catch (error) {
+            console.error('Error en la petición, guardando localmente:', error);
+    
+            if ('serviceWorker' in navigator && 'SyncManager' in window) {
+                navigator.serviceWorker.ready.then(sw => sw.sync.register('sync-todos'));
+            }
+            
+            await this.saveTodoToIndexedDB(newTodo);
+        }
+    
         this.setState({
             todo_description: '',
             todo_responsible: '',
             todo_priority: '',
             todo_completed: false
-        })
-    }
+        });
+    };    
 
     // Función para guardar los datos en IndexedDB
     saveTodoToIndexedDB(todo) {

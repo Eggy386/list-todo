@@ -7,10 +7,12 @@ webpush.setVapidDetails(
     keys.privateKey
 );
 
-function sendPush(pushSubscription) {
-
-    // Asegúrate de devolver la promesa
-    return webpush.sendNotification(pushSubscription, 'Luis es gay')
+function sendPush(pushSubscription, message) {
+    const payload = JSON.stringify({
+        title: 'Nueva tarea',
+        body: message
+    });
+    return webpush.sendNotification(pushSubscription, payload);
 }
 
 
