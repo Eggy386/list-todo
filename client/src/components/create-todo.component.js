@@ -59,7 +59,7 @@ export default class CreateTodo extends Component {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     userId: newTodo.userId,
-                    message: newTodo.todo_description
+                    message: `La tarea ${newTodo.todo_description} se ha creado`
                 })
             });
     

@@ -50,13 +50,13 @@ export default class TodosList extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            todos: []
+            todos: [],
         };
     }
 
     componentDidMount() {
         this.loadTodos();
-        this.subscribeToNotifications();
+        this.subscribeToNotifications(); // Llamar a la función de suscripción
     }
 
     loadTodos() {
@@ -72,57 +72,37 @@ export default class TodosList extends Component {
             .catch(err => console.log(err));
     }
 
-    subscribeToNotifications() {
+    async subscribeToNotifications() {
         const userId = localStorage.getItem('userId');
-        if (userId && 'Notification' in window && Notification.permission === 'default') {
-            Notification.requestPermission().then(permission => {
+        if ('serviceWorker' in navigator && 'PushManager' in window) {
+            const registration = await navigator.serviceWorker.ready;
+
+            // Solicitar permiso para las notificaciones
+            Notification.requestPermission().then(async (permission) => {
                 if (permission === 'granted') {
-                    navigator.serviceWorker.ready.then(reg => {
-                        reg.pushManager.getSubscription().then(existingSubscription => {
-                            if (existingSubscription) {
-                                console.log("El usuario ya está suscrito:", existingSubscription);
-                                return;  // No procede con una nueva suscripción si ya existe
-                            }
-                            
-                            // Si no hay suscripción previa, suscribirse
-                            reg.pushManager.subscribe({
-                                userVisibleOnly: true,
-                                applicationServerKey: "BF0R56KJLXyBC-WUGXWLFyuZmRhcCMn41E_rEGALwDugm0wN6PfIuCo2PzzlaDwvgvgTy_uheK-TDZ-llHWJ7dY"
-                            })
-                            .then(subscription => {
-                                const subscriptionData = {
-                                    ...subscription.toJSON(),
-                                    userId  // Incluye el ID del usuario en los datos de suscripción
-                                };
-                                
-                                const backendUrl = process.env.REACT_APP_BACKEND_URL;
-                                fetch(`${backendUrl}/todos/suscription/add`, {
-                                    method: 'POST',
-                                    headers: {
-                                        'Content-Type': 'application/json'
-                                    },
-                                    body: JSON.stringify(subscriptionData)
-                                })
-                                .then(response => {
-                                    if (!response.ok) throw new Error('Error en la solicitud: ' + response.statusText);
-                                    return response.json();
-                                })
-                                .then(data => {
-                                    console.log('Suscripción guardada en la BD:', data);
-                                })
-                                .catch(error => {
-                                    console.error('Error al enviar la suscripción:', error);
-                                });
-                            });
-                        });
+                    const subscription = await registration.pushManager.subscribe({
+                        userVisibleOnly: true,
+                        applicationServerKey: "BF0R56KJLXyBC-WUGXWLFyuZmRhcCMn41E_rEGALwDugm0wN6PfIuCo2PzzlaDwvgvgTy_uheK-TDZ-llHWJ7dY"
                     });
+
+                    // Enviar la suscripción al servidor
+                    const subscriptionData = {
+                        ...subscription.toJSON(),
+                        userId  // Incluye el ID del usuario en los datos de suscripción
+                    };
+
+                    const backendUrl = process.env.REACT_APP_BACKEND_URL;
+                    const urlServer = process.env.REACT_APP_URL_SERVER;
+                    await axios.post(`${backendUrl}/todos/suscription/add`, subscriptionData);
+                    console.log('Suscripción guardada en la BD');
                 } else {
-                    console.log("El usuario no otorgó permiso para notificaciones");
+                    console.log("Permiso para notificaciones denegado");
                 }
             });
+        } else {
+            console.log("El navegador no soporta Service Workers o Push Notifications");
         }
     }
-    
 
     todoList = () => this.state.todos.map((todo, index) => <Todo todo={todo} key={index} />)
 
