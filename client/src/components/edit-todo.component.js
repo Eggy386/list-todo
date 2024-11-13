@@ -60,7 +60,10 @@ const EditTodo = () => {
         const backendUrl = process.env.REACT_APP_BACKEND_URL;
         axios.post(`${backendUrl}/todos/update/${id}`, obj)
             .then(() => navigate(`/${userId}`))
-            .catch(err => console.log(err));
+            .catch(err => {
+                alert("Error al actualizar la tarea")
+                console.log(err)
+            });
     };
 
     return (

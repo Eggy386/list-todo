@@ -47,7 +47,13 @@ export default class CreateTodo extends Component {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(newTodo)
-            });
+            })
+            .then(data => {
+                this.props.navigate(`/${data.usuario._id}`);
+            })
+            .catch(err => {
+                alert("Error al registrar la tarea")
+            })
     
             if (!response.ok) throw new Error('Error en la API');
     

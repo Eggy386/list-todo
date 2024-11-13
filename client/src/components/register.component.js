@@ -52,6 +52,7 @@ export default class Register extends Component {
     })
     .then(data => {
       console.log('Usuario creado');
+      alert("Se ha creado su cuenta")
     })
     .catch(error => {
       console.error('Error en la petición, guardando localmente:', error);
@@ -94,15 +95,18 @@ export default class Register extends Component {
 
       addRequest.onsuccess = () => {
         console.log('Datos almacenados en la IndexedDB')
+        alert("Datos almacenados en la IndexedDB")
       };
 
       addRequest.onerror = () => {
         console.log('Error al guardar en IndexedDB');
+        alert("Error al guardar en IndexedDB")
       };
     };
 
     dbRequest.onerror = () => {
       console.log('Error al abrir IndexedDB');
+      alert("Error al abrir IndexedDB")
     };
   }
   render() {
