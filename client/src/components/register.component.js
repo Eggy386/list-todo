@@ -107,7 +107,7 @@ export default class Register extends Component {
   }
   render() {
     return (
-      <div className='grid g:grid-cols-2 grid-cols-1 min-h-screen bg-custom-background'>
+      <div className='grid lg:grid-cols-2 grid-cols-1 min-h-screen bg-custom-background'>
         <div className='p-6 lg:flex flex-col justify-center items-center bg-white hidden'>
           <div className='flex items-center mb-12'>
             <img src={logo} alt='logo' className='h-16 mr-4'/>
@@ -115,8 +115,8 @@ export default class Register extends Component {
           </div>
           <Image className='object-contain'/>
         </div>
-        <div className='lg:p-8 md:p-8 p-0flex items-center justify-center'>
-          <div className='bg-custom-conponents lg:rounded-xl md:rounded-xl rounded-none p-6 w-width-full lg:size-auto md:size-auto h-screen'>
+        <div className='lg:p-8 md:p-8 p-0 flex items-center justify-center'>
+          <div className='bg-custom-conponents lg:rounded-xl md:rounded-xl rounded-none p-6 w-width-full lg:w-width-full lg:h-auto md:w-width-full md:h-auto h-screen'>
             <h3 className='text-center text-white font-semibold text-4xl my-12'>Regístro</h3>
             <form className='text-gray-200 text-xl' onSubmit={this.onSubmit}>
               <div className="my-8 flex flex-col">

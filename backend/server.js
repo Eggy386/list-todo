@@ -112,21 +112,25 @@ todoRoutes.route('/add').post((req,res) => {
         });
 });
 
-todoRoutes.route('/suscription/add').post((req,res) => {
-    // Crea una nueva suscripción con los datos del cuerpo de la solicitud, que ahora incluye `userId`
-    const suscription = new suscriptionModel({
-        endpoint: req.body.endpoint,
-        expirationTime: req.body.expirationTime,
-        keys: req.body.keys,
-        userId: req.body.userId // Asigna el userId desde el req.body
-    });
-    suscription.save()
-    .then( suscription => {
-        res.status(200).json({'suscription': 'suscription added successfully'});
-    })
-    .catch( err => {
-        res.status(400).send('adding new suscription failed');
-    });
+todoRoutes.route('/suscription/add').post(async(req,res) => {
+    const { endpoint, keys, userId } = req.body;
+
+    try {
+        // Busca si ya existe una suscripción con el mismo endpoint para el usuario
+        const existingSubscription = await suscriptionModel.findOne({ endpoint, userId });
+        
+        if (existingSubscription) {
+            return res.status(200).json({ message: 'El usuario ya tiene una suscripción activa.' });
+        }
+
+        // Si no existe, crea una nueva suscripción
+        const newSubscription = new suscriptionModel({ endpoint, keys, userId });
+        await newSubscription.save();
+
+        res.status(201).json({ message: 'Suscripción añadida exitosamente.' });
+    } catch (error) {
+        res.status(500).json({ error: 'Error al guardar la suscripción.' });
+    }
 })
 
 todoRoutes.route('/sendPush').post(async (req, res) => {

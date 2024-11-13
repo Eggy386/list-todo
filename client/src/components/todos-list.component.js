@@ -78,34 +78,41 @@ export default class TodosList extends Component {
             Notification.requestPermission().then(permission => {
                 if (permission === 'granted') {
                     navigator.serviceWorker.ready.then(reg => {
-                        reg.pushManager.subscribe({
-                            userVisibleOnly: true,
-                            applicationServerKey: "BF0R56KJLXyBC-WUGXWLFyuZmRhcCMn41E_rEGALwDugm0wN6PfIuCo2PzzlaDwvgvgTy_uheK-TDZ-llHWJ7dY"
-                        })
-                        .then(subscription => {
-                            const subscriptionData = {
-                                ...subscription.toJSON(),
-                                userId  // Incluye el ID del usuario en los datos de suscripción
-                            };
+                        reg.pushManager.getSubscription().then(existingSubscription => {
+                            if (existingSubscription) {
+                                console.log("El usuario ya está suscrito:", existingSubscription);
+                                return;  // No procede con una nueva suscripción si ya existe
+                            }
                             
-                            const urlServer = process.env.REACT_APP_URL_SERVER;
-                            const backendUrl = process.env.REACT_APP_BACKEND_URL;
-                            fetch(`${backendUrl}/todos/suscription/add`, {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json'
-                                },
-                                body: JSON.stringify(subscriptionData)
+                            // Si no hay suscripción previa, suscribirse
+                            reg.pushManager.subscribe({
+                                userVisibleOnly: true,
+                                applicationServerKey: "BF0R56KJLXyBC-WUGXWLFyuZmRhcCMn41E_rEGALwDugm0wN6PfIuCo2PzzlaDwvgvgTy_uheK-TDZ-llHWJ7dY"
                             })
-                            .then(response => {
-                                if (!response.ok) throw new Error('Error en la solicitud: ' + response.statusText);
-                                return response.json();
-                            })
-                            .then(data => {
-                                console.log('Suscripción guardada en la BD:', data);
-                            })
-                            .catch(error => {
-                                console.error('Error al enviar la suscripción:', error);
+                            .then(subscription => {
+                                const subscriptionData = {
+                                    ...subscription.toJSON(),
+                                    userId  // Incluye el ID del usuario en los datos de suscripción
+                                };
+                                
+                                const backendUrl = process.env.REACT_APP_BACKEND_URL;
+                                fetch(`${backendUrl}/todos/suscription/add`, {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json'
+                                    },
+                                    body: JSON.stringify(subscriptionData)
+                                })
+                                .then(response => {
+                                    if (!response.ok) throw new Error('Error en la solicitud: ' + response.statusText);
+                                    return response.json();
+                                })
+                                .then(data => {
+                                    console.log('Suscripción guardada en la BD:', data);
+                                })
+                                .catch(error => {
+                                    console.error('Error al enviar la suscripción:', error);
+                                });
                             });
                         });
                     });
@@ -115,6 +122,7 @@ export default class TodosList extends Component {
             });
         }
     }
+    
 
     todoList = () => this.state.todos.map((todo, index) => <Todo todo={todo} key={index} />)
 
