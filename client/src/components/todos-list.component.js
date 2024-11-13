@@ -51,12 +51,18 @@ export default class TodosList extends Component {
         super(props);
         this.state = {
             todos: [],
+            isSubscribed: false  // Nueva variable de estado
         };
     }
 
     componentDidMount() {
         this.loadTodos();
-        this.subscribeToNotifications(); // Llamar a la función de suscripción
+    
+        // Verificar si ya se ha suscrito
+        if (!localStorage.getItem('isSubscribed')) {
+            this.subscribeToNotifications();
+            localStorage.setItem('isSubscribed', 'true'); // Marca que la suscripción fue hecha
+        }
     }
 
     loadTodos() {
@@ -76,33 +82,38 @@ export default class TodosList extends Component {
         const userId = localStorage.getItem('userId');
         if ('serviceWorker' in navigator && 'PushManager' in window) {
             const registration = await navigator.serviceWorker.ready;
-
+    
+            // Verificar si ya existe una suscripción
+            const existingSubscription = await registration.pushManager.getSubscription();
+            if (existingSubscription) {
+                console.log("El usuario ya está suscrito");
+                return;  // Termina aquí si ya hay una suscripción
+            }
+    
             // Solicitar permiso para las notificaciones
-            Notification.requestPermission().then(async (permission) => {
-                if (permission === 'granted') {
-                    const subscription = await registration.pushManager.subscribe({
-                        userVisibleOnly: true,
-                        applicationServerKey: "BF0R56KJLXyBC-WUGXWLFyuZmRhcCMn41E_rEGALwDugm0wN6PfIuCo2PzzlaDwvgvgTy_uheK-TDZ-llHWJ7dY"
-                    });
-
-                    // Enviar la suscripción al servidor
-                    const subscriptionData = {
-                        ...subscription.toJSON(),
-                        userId  // Incluye el ID del usuario en los datos de suscripción
-                    };
-
-                    const backendUrl = process.env.REACT_APP_BACKEND_URL;
-                    const urlServer = process.env.REACT_APP_URL_SERVER;
-                    await axios.post(`${backendUrl}/todos/suscription/add`, subscriptionData);
-                    console.log('Suscripción guardada en la BD');
-                } else {
-                    console.log("Permiso para notificaciones denegado");
-                }
-            });
+            const permission = await Notification.requestPermission();
+            if (permission === 'granted') {
+                const newSubscription = await registration.pushManager.subscribe({
+                    userVisibleOnly: true,
+                    applicationServerKey: "BF0R56KJLXyBC-WUGXWLFyuZmRhcCMn41E_rEGALwDugm0wN6PfIuCo2PzzlaDwvgvgTy_uheK-TDZ-llHWJ7dY"
+                });
+    
+                const subscriptionData = {
+                    ...newSubscription.toJSON(),
+                    userId
+                };
+    
+                const urlServer = process.env.REACT_APP_URL_SERVER;
+                const backendUrl = process.env.REACT_APP_BACKEND_URL;
+                await axios.post(`${backendUrl}/todos/suscription/add`, subscriptionData);
+                console.log('Nueva suscripción guardada en la BD');
+            } else {
+                console.log("Permiso para notificaciones denegado");
+            }
         } else {
             console.log("El navegador no soporta Service Workers o Push Notifications");
         }
-    }
+    }    
 
     todoList = () => this.state.todos.map((todo, index) => <Todo todo={todo} key={index} />)
 
