@@ -142,7 +142,7 @@ function sendTodosFromIndexedDB() {
                 .then(data => {
                     console.log('Tarea sincronizada con éxito:', data);
                     //eliminarTodosLosUsuarios(); // Eliminar tarea de IndexedDB tras sincronizar
-                    eliminarTodoById(todo.id)
+                    eliminarRegistroIndexedDB(todo.id)
                 })
                 .catch(error => {
                     console.error('Error al sincronizar tarea:', error);
