@@ -77,7 +77,7 @@ self.addEventListener('sync', event => {
     console.log('Sync event triggered', event);
     // Si el tag del evento es 'sync-users', se llama a la función sendUserDataFromIndexedDB(), 
     //que intenta sincronizar los datos de usuarios almacenados en IndexedDB con un servidor remoto.
-    if (event.tag === 'sync-users') {
+    if (event.tag === 'sync-todos') {
         sendTodosFromIndexedDB();
     }
 });
