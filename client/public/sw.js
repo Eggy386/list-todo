@@ -126,7 +126,7 @@ function sendTodosFromIndexedDB() {
 
             // Enviar cada tarea al backend
             const promises = todos.map(todo => {
-                return fetch('http://localhost:4000/todos/add', {
+                return fetch('https://backend-61oh.onrender.com/todos/add', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
